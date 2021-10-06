@@ -1,22 +1,32 @@
-#include <signal.h>
-#include <sys/types.h>
-#include "./libft/libft.h"
+#include "ft_putnbr_fd.c"
 
-typedef struct {
-	int si_siginfo;
-	int si_code;
-	union sigval si_value;
+void ft_putchar(int i)
+{
+	static int	i;
+	static int	n;
+
+	i = 2;
+	n = 0;
 
 }
-void	ft_name(int firstSig, siginfo_t *sig, void context)
+
+void	ft_handler_sigusr1(int sig)
+{
+
+	ft_putnbr_fd(1, 1);
+}
+
+void	ft_handler_sigusr2(int sig)
+{
+	ft_putnbr_fd(1, 1);
+}
 
 int	main	(void)
 {
-	ft_putstr_fd("", 1);
-	struct sigaction firstSig;
-	firstSig.sa_flags = SA_SIGINFO;
-	firstSig.sa_sigaction = ft_name;
-	sigaction(signalName, &firstSig, NULL);
-	signal(SIGINT, handler);
+	/*struct sigaction sa = { 0 };
+
+	sa.sa_handler = &ft_handler;
+	sigaction(SIGUSR1, &sa, NULL);*/
+	ft_putnbr_fd(getpid(), 1);
 	return(0);
 }

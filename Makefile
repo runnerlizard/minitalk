@@ -1,58 +1,44 @@
-SERVER		= server
-CLIENT		= client
-LIBFT		= libft/libft.a
+CC = gcc
 
-MSG_LEN		= 1000
+NAME_CLIENT = client.a
+NAME_SERVER = server.a
 
-MSG			= cat /dev/urandom | base64 | head -c $(MSG_LEN)
-#openssl rand -base64 $(MSG_LEN)
+PROGRAM_CLIENT = client
+PROGRAM_SERVER = server
 
-CFLAG		= -Wall -Wextra -Werror -O2
-INC_PATH	= libft/inc
+LIST_CLIENT = client.c ft_putnbr_fd.c ft_putstr_fd.c
+LIST_SERVER = server.c ft_putnbr_fd.c ft_putstr_fd.c
 
-SRC_SERVER	= server.c
-OBJ_SERVER	= $(SRC_SERVER:.c=.o)
+OBJ_CLIENT	=	$(LIST_CLIENT:.c=.o)
+OBJ_SERVER	=	$(LIST_SERVER:.c=.o)
 
-SRC_CLIENT	= client.c
-OBJ_CLIENT	= $(SRC_CLIENT:.c=.o)
+FLAGS	=	-Wall -Wextra -Werror
 
-all:		$(LIBFT) $(SERVER) $(CLIENT)
+all:	$(PROGRAM_CLIENT) $(PROGRAM_SERVER)
 
-$(LIBFT):
-	@make -C libft
+$(PROGRAM_CLIENT):	$(NAME_CLIENT)
+	@$(CC) -o $(PROGRAM_CLIENT) $(NAME_CLIENT)
 
-$(SERVER):	$(OBJ_SERVER) $(LIBFT)
-	gcc $(OBJ_SERVER) -L./libft -lft -o $@
+$(PROGRAM_SERVER):	$(NAME_SERVER)
+	@$(CC) -o $(PROGRAM_SERVER) $(NAME_SERVER)
 
-$(CLIENT):	$(OBJ_CLIENT) $(LIBFT)
-	gcc $(OBJ_CLIENT) -L./libft -lft -o $@
+$(NAME_SERVER): $(OBJ_SERVER)
+	@ar rcs $(NAME_SERVER) $(OBJ_SERVER)
 
-%.o:		%.c
-	gcc $(CFLAG) -I $(INC_PATH) -c $< -o $@
+$(NAME_CLIENT): $(OBJ_CLIENT)
+	@ar rcs $(NAME_CLIENT) $(OBJ_CLIENT)
+
+.c.o:	$(LIST_CLIENT) $(LIST_SERVER)
+	@$(CC) $(FLAGS) -c $< -o $@
 
 clean:
-	@make clean -C libft
-	@rm -f $(OBJ_SERVER) $(OBJ_CLIENT)
+	-@rm $(OBJ_SERVER) $(OBJ_CLIENT) 2>/dev/null || true
 
-fclean:		clean
-	@make fclean -C libft
-	rm -f $(SERVER) $(CLIENT)
+fclean:clean
+	-@rm $(NAME_SERVER) $(NAME_CLIENT) $(PROGRAM_SERVER) $(PROGRAM_CLIENT) 2>/dev/null || true
 
-re:			fclean all
+re:	fclean all
 
-norm:
-	@make norm -C libft
-	@norminette $(SRC_SERVER) $(SRC_CLIENT) | grep -v "OK!"
+re_bonus:	fclean bonus
 
-pkill:
-	@-pkill server
-
-rs:			server pkill
-	./server &
-
-rc:			client
-	./client $$(pgrep -xn server | head -n 1 | cut -d ' ' -f 2) "$$($(MSG))" &
-
-test:		rs rc
-
-.PHONY:		all clean fclean re norm pkill rs rc test
+.PHONY:	all clean fclean re re_bonus
