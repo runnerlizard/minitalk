@@ -2,61 +2,64 @@
 #include "ft_putstr_fd.c"
 #include <time.h>
 
-int	ft_postman(int i, int serverPid, char *s)
+int	ft_postman(int serverPid, char *s)
 {
 	static char	*str;
-	int			serPid;
+	//int			i;
 
 	if (s != NULL)
-		str == s;
-	if (str[i] == '0')
+		str = s;
+	ft_putnbr_fd(serverPid, 1);
+	ft_putstr_fd(str, 1);
+	/*if (str[i] == '0')
 		kill(serverPid, SIGUSR1);
 	else if (str[i] == '1')
 		kill(serverPid, SIGUSR2);
+	i++;*/
 	return(0);
 }
-
+/*
 int	ft_hdl_cl(int sig, siginfo_t *info, void *context)
 {
-	static int	i;
-
 	(void)context;
 	if (sig == SIGUSR1)
-		ft_postman(++i, info->si_pid, NULL);
+		ft_postman(info->si_pid, NULL);
 	else
 		exit (0);
 	return (0);
 }
-
-int	ft_transform(int serverPid, int c)
+*/
+char	*ft_transform(char *s, int length)
 {
-	int		i;
-	int		j;
-	int		k;
-	char	utf[32];
+	int		n[5];
+	char	utf[length * 26];
 
-	i = 0;
-	while (c > 0)
+	n[0] = 0;
+	n[1] = 0;
+	while (s[n[0]])
 	{
-		utf[i++] = c % 2 + 48;
-		c = c / 2;
+		n[3] = n[1];
+		while (s[n[0]] > 0)
+		{
+			utf[n[1]++ + 5] = s[n[0]] % 2 + 48;
+			s[n[0]] = s[n[0]] / 2;
+		}
+		n[2] = 5;
+		n[4] = n[1];
+		while (n[2]-- > 0)
+		{
+			utf[n[3]++] = n[4] % 2 + 48;
+			n[4] = n[4] / 2;
+		}
+		n[0]++;
 	}
-	j = i;
-	k = 4;
-	while (k-- > -1)
-	{
-		utf[i++] = j % 2 + 48;
-		j = j / 2;
-	}
-	utf[i] = 0;
-	return (serverPid);
+	utf[n[3]] = 0;
+	return (utf);
 }
 
 int	main(int argc, char **argv)
 {
-	int	serverPid;
-	int	i;
-	struct sigaction	sa;
+	/*struct sigaction	sa;
 	sigset_t			block_mask;
 
 	if (argc != 3)
@@ -69,8 +72,8 @@ int	main(int argc, char **argv)
 	sa.sa_mask = block_mask;
 	sa.sa_sigaction = &ft_hdl_cl;
 	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
-	ft_postman(0, ft_atoi(argv[1]), ft_transform(argv[2]));
+	sigaction(SIGUSR2, &sa, NULL);*/
+	ft_postman(ft_atoi(argv[1]), ft_transform((argv[2]), ft_strlen(argv[2])));
 	while (1)
 		pause();
 	return(0);
