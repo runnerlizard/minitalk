@@ -38,51 +38,67 @@ void	ft_hdl_ser(int sig, siginfo_t *info, void *context)
 		n[0] = info->si_pid;
 	if (n[1] < 5)
 	{
-		ft_putstr_fd("\nhere\n", 1);
-		ft_putnbr_fd(n[0], 1);
+		ft_putstr_fd("\ncount -  ", 1);
 		ft_putnbr_fd(n[1], 1);
+		ft_putstr_fd("      length - ", 1);
 		ft_putnbr_fd(n[2], 1);
+		ft_putstr_fd("     obj - ", 1);
 		ft_putnbr_fd(n[3], 1);
 		if (sig == SIGUSR1)
 		{
-			if (kill(n[0], SIGUSR1) != -1)
-				n[2] = ft_sigusr(n[2], n[1]++, 0, -10);
+			n[2] = ft_sigusr(n[2], n[1]++, 0, -10);
+			ft_putstr_fd("    sigusr -  ", 1);
+			ft_putnbr_fd(SIGUSR1, 1);
+			if (kill(n[0], SIGUSR1) == -1)
+				ft_putstr_fd("Error", 1);
 		}
 		else if (sig == SIGUSR2)
 		{
-			if (kill(n[0], SIGUSR1) != -1)
-				n[2] = ft_sigusr(n[2], n[1]++, 1, -10);
+			n[2] = ft_sigusr(n[2], n[1]++, 1, -10);
+			ft_putstr_fd("    sigusr -  ", 1);
+			ft_putnbr_fd(SIGUSR2, 1);
+			if (kill(n[0], SIGUSR1) == -1)
+				ft_putstr_fd("Error", 1);
 		}
 	}
 	else if (n[2] > 0)
 	{
+		ft_putstr_fd("\nget - ", 1);
+		ft_putnbr_fd(n[2], 1);
 		if (sig == SIGUSR1)
 		{
-			if (kill(n[0], SIGUSR1) != -1)
-				n[3] = ft_sigusr(n[3], n[2], 0, n[2]);
+			n[3] = ft_sigusr(n[3], n[2], 0, n[2]);
+			if (kill(n[0], SIGUSR1) == -1)
+				ft_putstr_fd("Error", 1);
+			ft_putstr_fd("    value - ", 1);
 			ft_putnbr_fd(n[3], 1);
-			ft_putstr_fd("\nsigusr1\n", 1);
+			ft_putstr_fd("    count - ", 1);
 			ft_putnbr_fd(n[2], 1);
-			ft_putstr_fd("\nn2\n", 1);
+			ft_putstr_fd("    sigusr -  ", 1);
+			ft_putnbr_fd(SIGUSR1, 1);
 		}
 		else if (sig == SIGUSR2)
 		{
-			if (kill(n[0], SIGUSR1) != -1)
-				n[3] = ft_sigusr(n[3], n[2], 1, n[2]);
+			n[3] = ft_sigusr(n[3], n[2], 1, n[2]);
+			if (kill(n[0], SIGUSR1) == -1)
+				ft_putstr_fd("Error", 1);
+			ft_putstr_fd("    value - ", 1);
 			ft_putnbr_fd(n[3], 1);
-			ft_putstr_fd("\nsigusr2\n", 1);
+			ft_putstr_fd("    count - ", 1);
 			ft_putnbr_fd(n[2], 1);
-			ft_putstr_fd("\nn2\n", 1);
+			ft_putstr_fd("    sigusr -  ", 1);
+			ft_putnbr_fd(SIGUSR2, 1);
 		}
 		n[2]--;
 	}
-	else if (kill(n[0], SIGUSR1) != -1)
+	if ((n[2] == 0) && (n[3] != 0))
 	{
 		c = n[3];
 		write(1, &c, 1);
 		n[0] = 0;
 		n[1] = 0;
 		n[3] = 0;
+		n[2] = 0;
 	}
 }
 

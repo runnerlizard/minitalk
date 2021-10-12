@@ -6,7 +6,7 @@ int	ft_postman(int serverPid, char *s)
 	static char	*str;
 	static int	i;
 
-	if (serverPid == -10)
+	if (serverPid == -10) 
 	{
 		free(str);
 		exit (0);
@@ -17,6 +17,8 @@ int	ft_postman(int serverPid, char *s)
 		kill(serverPid, SIGUSR1);
 	else if (str[i] == '1')
 		kill(serverPid, SIGUSR2);
+	else 
+		exit(1);
 	i++;
 	return(serverPid);
 }
@@ -24,7 +26,6 @@ int	ft_postman(int serverPid, char *s)
 void	ft_hdl_cl(int sig, siginfo_t *info, void *context)
 {
 	(void)context;
-	sleep(1);
 	if (sig == SIGUSR1)
 		ft_postman(info->si_pid, NULL);
 	else
@@ -61,6 +62,7 @@ char	*ft_transform(char *s, int length)
 		n[0]++;
 	}
 	utf[n[4]] = 0;
+	ft_putstr_fd(utf, 1);
 	return (utf);
 }
 
