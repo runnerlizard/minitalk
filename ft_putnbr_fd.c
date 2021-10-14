@@ -1,6 +1,16 @@
-#include <unistd.h>
-#include <signal.h>
-#include <stdlib.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cluco <cluco@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/14 19:46:28 by cluco             #+#    #+#             */
+/*   Updated: 2021/10/14 19:52:22 by cluco            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minitalk.h"
 
 int	ft_atoi(const char *str)
 {
@@ -31,14 +41,14 @@ int	ft_atoi(const char *str)
 	return (a * sign);
 }
 
-long int	ft_abs1(long int n)
+static long int	ft_abs1(long int n)
 {
 	if (n < 0)
 		n = -n;
 	return (n);
 }
 
-void	ft_write_small(int fd, long int n)
+static void	ft_write_small(int fd, long int n)
 {
 	char	res;
 
@@ -46,7 +56,7 @@ void	ft_write_small(int fd, long int n)
 	write(fd, &res, 1);
 }
 
-void	ft_write_big(int fd, long int n)
+static void	ft_write_big(int fd, long int n)
 {
 	char		res;
 	long int	k;
