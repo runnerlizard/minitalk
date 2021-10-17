@@ -6,7 +6,7 @@
 /*   By: cluco <cluco@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/14 19:46:33 by cluco             #+#    #+#             */
-/*   Updated: 2021/10/14 21:47:09 by cluco            ###   ########.fr       */
+/*   Updated: 2021/10/17 09:12:56 by cluco            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,6 @@ void	ft_hdl_ser(int sig, siginfo_t *info, void *context)
 		n[3] = ft_sigusr(n[3], n[2]--, 0, 10);
 	else if ((n[1] > 4) && (n[2] > 0) && (sig == SIGUSR2))
 		n[3] = ft_sigusr(n[3], n[2]--, 1, 10);
-	usleep(100);
-	if (kill(info->si_pid, SIGUSR1) == -1)
-		ft_putstr_fd("Error", 1);
 	if ((n[2] == 0) && (n[3] != 0))
 	{
 		c = n[3];
@@ -65,6 +62,9 @@ void	ft_hdl_ser(int sig, siginfo_t *info, void *context)
 		n[3] = 0;
 		n[2] = 0;
 	}
+	usleep(100);
+	if (kill(info->si_pid, SIGUSR1) == -1)
+		ft_putstr_fd("Error", 1);
 }
 
 int	main(void)
